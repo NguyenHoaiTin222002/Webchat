@@ -1,0 +1,28 @@
+.room{
+  padding: 15px 20px;
+  display: flex;
+  height: 80px;
+  border-bottom: 1px solid gainsboro;
+  &.action{
+    background: #c4d5f8;
+  }
+  &:hover{
+    background: gainsboro;
+  }
+  .room-image{
+    height: 50px;
+    width: 50px;
+    img.image {
+      height: 100%;
+      width: 100%;
+      border: 1px solid;
+      border-radius: 50%;
+    }
+  }
+  .room-name{
+    margin-left: 20px;
+  }
+
+
+}
+

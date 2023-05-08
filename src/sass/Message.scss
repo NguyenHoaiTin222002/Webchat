@@ -1,0 +1,28 @@
+.message{
+  margin-bottom: 20px;
+  max-width: 900px;
+  min-width: 100px;
+  &.myMessage {
+    margin-left: auto;
+  }
+  .message_sender{
+   text-align: left;
+    &.disNone{
+      display: none;
+    }
+  }
+  .message_value{
+    display: flex;
+    justify-content: flex-end;
+   label{
+     background: #0091ff;
+     padding: 10px;
+     color: #fff;
+     border-radius: 15px;
+     text-align: left;
+     min-height: 50px;
+   }
+
+
+  }
+}
