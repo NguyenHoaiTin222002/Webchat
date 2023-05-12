@@ -27,7 +27,9 @@
 .login-title {
     font-size: 30px;
     font-weight: 600;
+    margin-bottom:30px ;
 }
+
 .magrin-input {
     margin: 5px 0;
 }
@@ -41,6 +43,12 @@
     outline: 0;
     border-bottom: 1px solid #999;
 }
+    .message-err{
+        text-align: left;
+      height: 25px;
+        color: red;
+        padding: 0 30px;
+    }
 .login-with {
     font-weight: 600;
 }

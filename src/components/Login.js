@@ -23,9 +23,10 @@ function Login(){
                         />
 
                     </div>
-                    {/*<div className="col-12" style={{ color: "red" }}>*/}
-                    {/*    {this.state.errorMessage}*/}
-                    {/*</div>*/}
+
+                    <div className="col-12 message-err">
+                           lỗi
+                    </div>
                     <div className="col-12">
                         <button
                             className="btn-login"
