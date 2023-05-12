@@ -16,31 +16,29 @@ function Login(){
         }
     }
     const  handleLogin= async () =>{
-
           var login = {
               action: "onchat",
               data: {
                   event: "LOGIN",
                   data: {
                       user: userName,
-                      pass: password,
+                      pass:  password,
                   },
               },
-          };
+          }
           socket.send(JSON.stringify(login));
     }
     useEffect(() =>{
         socket.addEventListener("message", function (event) {
             let result = JSON.parse(event.data);
-            console.log(result.data)
+            console.log( result.data.RE_LOGIN_CODE)
             if(result.status === 'error' ){
                 setmessErr(result.mes);
             }else {
-                localStorage.setItem('RE_LOGIN_CODE', result.data.RE_LOGIN_CODE);
+                localStorage.setItem('RE_LOGIN_CODE', result.data["RE_LOGIN_CODE"]);
                 localStorage.setItem('userName', userName);
                 navigate('/Chat')
             }
-
         });
     },[socket])
 

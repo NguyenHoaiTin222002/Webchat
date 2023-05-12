@@ -19,10 +19,6 @@ function SignUP(){
         }
     }
     const  handleSignUp = async () => {
-        if (userName.length < 6 || password.length < 6) {
-            setmessErr("Username and password at least 6 characters")
-        } else {
-        }
         const registerData = {
             action: "onchat",
             data: {
