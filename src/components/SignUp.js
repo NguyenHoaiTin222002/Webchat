@@ -18,8 +18,11 @@ function SignUP(){
             setPassword(value)
         }
     }
-    const  handleSignUp = async () =>{
-
+    const  handleSignUp = async () => {
+        if (userName.length < 6 || password.length < 6) {
+            setmessErr("Username and password at least 6 characters")
+        } else {
+        }
         const registerData = {
             action: "onchat",
             data: {
@@ -31,22 +34,19 @@ function SignUP(){
             },
         };
         socket.send(JSON.stringify(registerData));
-        socket.onmessage()
-        socket.addEventListener("message", function (event) {
-            // Nhận một tin nhắn từ WebSocket
-                console.log(event.data)
-            const  data = JSON.parse(event.data);
-                if(data.status === 'error' ){
-                    setmessErr(data.mes);
-                }else {
-                    navigate('/')
-
-                }
-        });
-
-
     }
-
+   useEffect(() =>{
+    socket.addEventListener("message", function (event) {
+        // Nhận một tin nhắn từ WebSocket
+        console.log(event.data)
+        const  data = JSON.parse(event.data);
+        if(data.status === 'error' ){
+            setmessErr(data.mes);
+        }else {
+            navigate('/')
+        }
+    });
+  },[socket])
 
 
     return(<div className="login-background">
@@ -88,6 +88,7 @@ function SignUP(){
                      Sign Up
                     </button>
                 </div>
+
                 <div className="col-12">
                     <span className="forgot-password"> <Link to="/"> Log in  </Link> to your account</span>
                 </div>
