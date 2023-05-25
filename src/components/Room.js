@@ -1,10 +1,12 @@
 import  "../sass/Room.scss"
-import img from "../assets/img/Hinhnhom.jpg"
+import imgTeam from "../assets/img/Hinhnhom.jpg"
+import imgUser from "../assets/img/anhuser.png"
 
 function Room(props){
-    return(<div className={`room  ${props.action}`}>
-        <div className={`room-image`}><img className="image" src={img} /></div>
-        <div className="room-name">Nguyễn Hoài Tín</div>
+    const item = props.item
+    return(<div  className={`room  ${props.action}`}>
+        <div className={`room-image`}><img className="image" src={item.type===0?imgUser:imgTeam} /></div>
+        <div className="room-name">{item.name}</div>
     </div>)
 }
 export default Room;
