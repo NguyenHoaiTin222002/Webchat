@@ -3,7 +3,32 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Room from "./Room";
 import img from "../assets/img/Hinhnhom.jpg"
 import Message from "./Message";
+import SocketSingleton from "../Dao/SocketSingleton";
+import {useEffect, useState} from "react";
 function Chat(){
+    const socketSingleton = new SocketSingleton();
+    const [rooms,setRooms] = useState([]);
+
+
+    useEffect(  () =>{
+        socketSingleton.sendGetUserList();
+    },[])
+    useEffect(() =>{
+        socketSingleton.socket.addEventListener("message", function (event) {
+            let result = JSON.parse(event.data);
+            const data = result.data;
+            console.log(result)
+            switch (result.event){
+                case "GET_USER_LIST":
+                    setRooms(data)
+                    break;
+
+
+                default:
+                // code block
+            }
+        });
+    },[socketSingleton.socket])
     return(<div className="content">
         <div className="content-left">
             <div className="content-left-header">
@@ -21,17 +46,10 @@ function Chat(){
                 </div>
                 <div className="left-list">
                     <Scrollbars style={{ width: "100%", height: "100%" }}>
-                         <Room action={"action"}/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
-                        <Room/>
+                        {rooms.map((item,index) => {
+                                return( <Room key={index} item={item}  />)
+                            }
+                        )}
                     </Scrollbars>
                 </div>
 

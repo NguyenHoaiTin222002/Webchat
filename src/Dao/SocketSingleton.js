@@ -31,7 +31,15 @@ class SocketSingleton{
     }
 
 
-
+    sendGetUserList(){
+        const value = {
+            action: "onchat",
+            data: {
+                event: "GET_USER_LIST"
+            }
+        }
+        this.socket.send(JSON.stringify(value))
+    }
 
 }
 
