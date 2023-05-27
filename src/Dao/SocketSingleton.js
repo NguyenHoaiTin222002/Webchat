@@ -41,6 +41,18 @@ class SocketSingleton{
         }
         this.socket.send(JSON.stringify(createRoom));
     }
+    sendJoinRoom(nameRoom){
+        const joinRoom = {
+            action: "onchat",
+            data: {
+                event: "JOIN_ROOM",
+                data: {
+                    name: nameRoom,
+                },
+            },
+        }
+        this.socket.send(JSON.stringify(joinRoom));
+    }
     getMessByNameRoom(name,type){
         if(type === 0) {
             var getchatmesspeople = {
