@@ -26,6 +26,12 @@ function Chat(){
         }
 
     }
+    // join phòng
+    const handleJoinRoom = async ()=>{
+        await socketSingleton.sendJoinRoom(roomName);
+        await socketSingleton.sendGetUserList();
+        setRoomName("");
+    }
     //tạo phong
     const handleCreatRoom = async () =>{
         await socketSingleton.sendCreateRoom(roomName);
@@ -83,6 +89,8 @@ function Chat(){
                 <div className="left-header-add-room" style={{display:"flex"}}>
                     <input value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
                     <button className="add-room btn" onClick={() => handleCreatRoom()}><i className="fa-solid fa-plus"></i></button>
+                    <button className="add-room btn" onClick={() => handleJoinRoom()} ><i
+                        className="fa-solid fa-arrow-right-to-bracket"></i></button>
                 </div>
             </div>
             <div className="content-left-list">
