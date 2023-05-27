@@ -20,9 +20,31 @@ function Chat(){
         setRoom(item)
         socketSingleton.getMessByNameRoom(item.name,item.type)
     }
+    const setchangeValue = (e,type) =>{
+        if(type === "roomName"){
+            setRoomName(e.target.value)
+        }
+
+    }
+    //tạo phong
+    const handleCreatRoom = async () =>{
+        await socketSingleton.sendCreateRoom(roomName);
+        await socketSingleton.sendGetUserList();
+        setRoomName("");
+
+    }
     useEffect(  () =>{
         socketSingleton.sendGetUserList();
     },[])
+    //load phong hay tao mới phòng điều lây ra tn
+
+    useEffect(  () =>{
+        if(rooms.length > 0){
+            setRoom(rooms[0])
+            socketSingleton.getMessByNameRoom(rooms[0].name,rooms[0].type)
+        }
+    },[rooms])
+
     useEffect(() =>{
         socketSingleton.socket.addEventListener("message", function (event) {
             let result = JSON.parse(event.data);
@@ -58,8 +80,9 @@ function Chat(){
                     <div className="left-header-title">Chats</div>
                     <button className="left-header-btn-logout btn">Đăng xuất</button>
                 </div>
-                <div className="left-header-add-room">
-                     <button className="add-room btn"><i className="fa-solid fa-plus"></i></button>
+                <div className="left-header-add-room" style={{display:"flex"}}>
+                    <input value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
+                    <button className="add-room btn" onClick={() => handleCreatRoom()}><i className="fa-solid fa-plus"></i></button>
                 </div>
             </div>
             <div className="content-left-list">
