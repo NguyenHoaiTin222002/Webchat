@@ -2,14 +2,24 @@ import "../sass/Chat.scss"
 import { Scrollbars } from 'react-custom-scrollbars';
 import Room from "./Room";
 import img from "../assets/img/Hinhnhom.jpg"
+import imgTeam from "../assets/img/Hinhnhom.jpg"
+import imgUser from "../assets/img/anhuser.png"
 import Message from "./Message";
 import SocketSingleton from "../Dao/SocketSingleton";
 import {useEffect, useState} from "react";
 function Chat(){
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
-
-
+    const [room,setRoom] = useState({});
+    const [roomName,setRoomName] = useState("");
+    const [messages, setMessages] = useState([]);
+    const  name = localStorage.getItem("name");
+    const  code = localStorage.getItem("code");
+    // lấy ra mess trong phòng đó
+    const handleGetRoom = (item) =>{
+        setRoom(item)
+        socketSingleton.getMessByNameRoom(item.name,item.type)
+    }
     useEffect(  () =>{
         socketSingleton.sendGetUserList();
     },[])
@@ -22,7 +32,19 @@ function Chat(){
                 case "GET_USER_LIST":
                     setRooms(data)
                     break;
-
+                case "GET_PEOPLE_CHAT_MES":
+                    setMessages(data)
+                    break;
+                case "GET_ROOM_CHAT_MES":
+                    setMessages(data.chatData)
+                    break;
+                case "CHECK_USER":
+                    if(result.status === "success"){
+                        const item = {name: roomName, type: 0, actionTime: '2023-05-21 14:46:17'}
+                        const copyRooms = [item,...rooms] ;
+                        setRooms(copyRooms)
+                    }
+                    break;
 
                 default:
                 // code block
@@ -47,7 +69,7 @@ function Chat(){
                 <div className="left-list">
                     <Scrollbars style={{ width: "100%", height: "100%" }}>
                         {rooms.map((item,index) => {
-                                return( <Room key={index} item={item}  />)
+                                return( <Room key={index} item={item} handleGetRoom ={handleGetRoom} action={room.name===item.name?"action":""} />)
                             }
                         )}
                     </Scrollbars>
@@ -63,8 +85,8 @@ function Chat(){
         <div className="content-right">
             <div className="content-right-header">
                 <div className="right-header-left" >
-                    <div className="right-header-image"><img className="image" src={img} /></div>
-                    <div className="right-header-name">Nguyễn Hoài Tín</div>
+                    <div className="right-header-image"><img className="image" src={room.type===0?imgUser:imgTeam} /></div>
+                    <div className="right-header-name">{room.name}</div>
                 </div>
                 <div className="right-header-right">
                     <i className="fa-solid fa-phone"></i>
@@ -74,34 +96,10 @@ function Chat(){
             </div>
             <div className="content-right-seem">
                 <Scrollbars style={{ width: "100%", height: "100%" }}>
-                  <Message name={"Hoài Tín"} message={"Cách hiểu này khiến cho cách phân đoạn thiếu tính khách quan." +
-                      " Với cách hiểu này, diện mạo đoạn văn không được xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                      "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                      "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} myMessage={true} message={"Cách hiểu này xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} message={"Cách hiểu này khiến cho cách phân đoạn thiếu tính khách quan." +
-                        " Với cách hiểu này, diện mạo đoạn văn không được xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} myMessage={true} message={"Cách hiểu này xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} message={"Cách hiểu này khiến cho cách phân đoạn thiếu tính khách quan." +
-                        " Với cách hiểu này, diện mạo đoạn văn không được xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} myMessage={true} message={"Cách hiểu này xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} message={"Cách hiểu này khiến cho cách phân đoạn thiếu tính khách quan." +
-                        " Với cách hiểu này, diện mạo đoạn văn không được xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
-                    <Message name={"Hoài Tín"} myMessage={true} message={"Cách hiểu này xác định (đoạn văn bắt đầu từ đâu, như thế nào, " +
-                        "các câu văn trong đoạn có mối liên kết với nhau như thế nào,…) cho nên việc xây dựng đoạn văn trở nên " +
-                        "khó khăn, phức tạp, khó rèn luyện các thao tác để trở thành kĩ năng kĩ xảo."}/>
+                    {messages.reverse().map((item,index) =>{
+                        return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes}/>
+                        )
+                    })}
                 </Scrollbars>
             </div>
             <div className="content-right-send">

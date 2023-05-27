@@ -30,7 +30,34 @@ class SocketSingleton{
         this.socket.send(JSON.stringify(login))
     }
 
+    getMessByNameRoom(name,type){
+        if(type === 0) {
+            var getchatmesspeople = {
+                action: "onchat",
+                data: {
+                    event: "GET_PEOPLE_CHAT_MES",
+                    data: {
+                        name: name,
+                        page: 1,
+                    },
+                },
+            };
+            this.socket.send(JSON.stringify(getchatmesspeople))
+        }else {
+            var getchatmessroom = {
+                action: "onchat",
+                data: {
+                    event: "GET_ROOM_CHAT_MES",
+                    data: {
+                        name:  name,
+                        page: 1,
+                    },
+                },
+            };
+            this.socket.send(JSON.stringify(getchatmessroom))
+        }
 
+    }
     sendGetUserList(){
         const value = {
             action: "onchat",
