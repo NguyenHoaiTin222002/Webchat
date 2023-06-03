@@ -14,7 +14,37 @@ class SocketSingleton{
     setSocket(){
         this.socket = new WebSocket("ws://140.238.54.136:8080/chat/chat");
     }
-
+    sendMessage(type,message,name){
+        let sendChat = {
+        }
+        if(type===0){
+            sendChat = {
+                action: "onchat",
+                data: {
+                    event: "SEND_CHAT",
+                    data: {
+                        type: "people",
+                        to: name,
+                        mes: message,
+                    },
+                },
+            };
+        }
+        if(type===1){
+            sendChat = {
+                action: "onchat",
+                data: {
+                    event: "SEND_CHAT",
+                    data: {
+                        type: "room",
+                        to: name,
+                        mes: message,
+                    },
+                },
+            };
+        }
+        this.socket.send(JSON.stringify(sendChat))
+    }
 
     sendLogin(userName, password){
         var login = {
