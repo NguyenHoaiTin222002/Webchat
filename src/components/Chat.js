@@ -7,6 +7,10 @@ import imgUser from "../assets/img/anhuser.png"
 import Message from "./Message";
 import SocketSingleton from "../Dao/SocketSingleton";
 import {useEffect, useState} from "react";
+import EmojiPicker, {
+    EmojiStyle,
+    Emoji,
+} from "emoji-picker-react";
 function Chat(){
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
@@ -16,6 +20,23 @@ function Chat(){
     const  name = localStorage.getItem("name");
     const  code = localStorage.getItem("code");
     const [inputMessage,setInputMessage] = useState("");
+
+    const [isShowIcon,setIsShowIcon] = useState(false);
+    const [valueIcon,setValueIcon] = useState([]);
+
+    //
+    const handleIsShowIcon = (e) =>{
+        e.stopPropagation();
+        if(!isShowIcon){
+            setValueIcon([])
+        }
+        setIsShowIcon(() =>!isShowIcon);
+    }
+    // lấy value icon
+    const handleGetIcon =  ( emojiData) =>{
+        setValueIcon([...valueIcon,emojiData.unified]);
+
+    }
     // lấy ra mess trong phòng đó
     const handleGetRoom = (item) =>{
         setRoom(item)
@@ -45,7 +66,14 @@ function Chat(){
     }
     // nhấn tính phòng
     const handleSendMessageChat = async () =>{
-        await socketSingleton.sendMessage(room.type,inputMessage, room.name)
+        if(isShowIcon){
+            const value =   JSON.stringify(valueIcon);
+            setValueIcon([])
+            await socketSingleton.sendMessage(room.type,value, room.name)
+        }else {
+            await socketSingleton.sendMessage(room.type,inputMessage, room.name)
+        }
+
         await socketSingleton.getMessByNameRoom(room.name,room.type)
         setInputMessage("")
     }
@@ -143,12 +171,34 @@ function Chat(){
                 </Scrollbars>
             </div>
             <div className="content-right-send">
-                      <div className={"right-send-icon-img"}>
-                           <div className={"send-icon btn-icon"}><i className="fa-solid fa-face-laugh"></i></div>
-                           <div className={"send-img btn-icon"}><i className="fa-solid fa-image"></i></div>
-                      </div>
+                <div className={"right-send-icon-img"}>
+                    {isShowIcon===true&&<div className={"menu-icon"}> <EmojiPicker
+                        onEmojiClick={handleGetIcon}
+                        autoFocusSearch={false}
+                        searchDisabled
+                        height={350}
+
+                    /></div>}
+                    <div className={"send-icon btn-icon"} >
+                        <i className="fa-solid fa-face-laugh" onClick={(e)=>handleIsShowIcon(e)} ></i></div>
+
+                    <div className={"send-img btn-icon"}><i className="fa-solid fa-image"></i></div>
+                </div>
                 <div className={"right-send-input"}>
-                    <div className={"group"}><input value={inputMessage} onChange={(e) => setchangeValue(e, "inputMessage")} className={"input-group"} placeholder={"Nhập tin nhấn vào đây"}/></div>
+
+                    {isShowIcon===true?<div className={"group group-1"}>
+                            {valueIcon.map((item,index)=>{
+                                return( <Emoji key={index}
+                                               unified={item}
+                                               emojiStyle={EmojiStyle.APPLE}
+                                               size={22}
+                                /> )
+                            })}
+                        </div>
+                        :<div className={"group"}><input value={inputMessage}
+                                                         onChange={(e) => setchangeValue(e, "inputMessage")}
+                                                         className={"input-group"} placeholder={"Nhập tin nhấn vào đây"}/></div>}
+
                     <button onClick={ ()=> handleSendMessageChat()} className={"btn btn-send"}><i className="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>
