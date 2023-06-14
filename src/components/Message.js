@@ -17,11 +17,12 @@ function Message(props){
     ])
     const date = fomatDate(props.createAt);
     return(
-
         <div className={`message ${props.myMessage === true ? "myMessage": ""}`}>
-            <div className={`message_sender ${props.myMessage === true ? "disNone" : ""}`}>
-                {props.name}-<div>{date}</div>
+            <div className={`message_sender`}>
+                <div className={` ${props.myMessage === true ? "disNone" : ""}`}>{props.name}-</div>
+                <div className={`send_date ${props.myMessage === true ? "dateMessage" : ""}`}>{date}</div>
             </div>
+
             <div className={`message_value  ${props.myMessage === true ? "message_right": ""}
             `}> {isIcon===true&&listIcon.length>0?<div> {listIcon.map((item,index)=>{
                 return( <Emoji key={index}

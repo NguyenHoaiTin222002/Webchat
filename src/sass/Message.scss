@@ -6,10 +6,25 @@
     margin-left: auto;
   }
   .message_sender{
-    text-align: left;
-    &.disNone{
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    .send_date{
+      font-size: 12px;
+      font-weight: 300;
+      &.dateMessage{
+
+          margin-left: auto;
+
+      }
+    }
+    .disNone{
       display: none;
     }
+  }
+  .send_date{
+    font-size: 12px;
+    font-weight: 300;
   }
   .message_value{
     display: flex;
