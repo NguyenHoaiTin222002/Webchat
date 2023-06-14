@@ -16,7 +16,7 @@ function Message(props){
     return(
         <div className={`message ${props.myMessage === true ? "myMessage": ""}`}>
             <div className={`message_sender ${props.myMessage === true ? "disNone" : ""}`}>
-                {props.name}
+                {props.name}-{props.createAt}
             </div>
             <div className={`message_value  ${props.myMessage === true ? "message_right": ""}
             `}> {isIcon===true&&listIcon.length>0?<div> {listIcon.map((item,index)=>{

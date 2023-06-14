@@ -165,7 +165,7 @@ function Chat(){
             <div className="content-right-seem">
                 <Scrollbars style={{ width: "100%", height: "100%" }}>
                     {[...messages].reverse().map((item,index) =>{
-                        return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes}/>
+                        return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes} createAt={item.createAt}/>
                         )
                     })}
                 </Scrollbars>
