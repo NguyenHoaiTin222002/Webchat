@@ -71,6 +71,19 @@ class SocketSingleton{
         }
         this.socket.send(JSON.stringify(createRoom));
     }
+
+    sendCheckUser(name){
+        const checkUser = {
+            action: "onchat",
+            data: {
+                event: "CHECK_USER",
+                data: {
+                    user: name,
+                },
+            },
+        }
+        this.socket.send(JSON.stringify(checkUser));
+    }
     sendJoinRoom(nameRoom){
         const joinRoom = {
             action: "onchat",
