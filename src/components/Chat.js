@@ -7,7 +7,15 @@ import imgUser from "../assets/img/anhuser.png"
 import Message from "./Message";
 import SocketSingleton from "../Dao/SocketSingleton";
 import {useEffect, useState} from "react";
+import EmojiPicker, {
+    EmojiStyle,
+    Emoji,
+} from "emoji-picker-react";
+import {useNavigate} from "react-router-dom";
 function Chat(){
+
+
+
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
     const [room,setRoom] = useState({});
@@ -15,6 +23,26 @@ function Chat(){
     const [messages, setMessages] = useState([]);
     const  name = localStorage.getItem("name");
     const  code = localStorage.getItem("code");
+    const [inputMessage,setInputMessage] = useState("");
+
+    let navigate = useNavigate();
+
+    const [isShowIcon,setIsShowIcon] = useState(false);
+    const [valueIcon,setValueIcon] = useState([]);
+
+    //
+    const handleIsShowIcon = (e) =>{
+        e.stopPropagation();
+        if(!isShowIcon){
+            setValueIcon([])
+        }
+        setIsShowIcon(() =>!isShowIcon);
+    }
+    // lấy value icon
+    const handleGetIcon =  ( emojiData) =>{
+        setValueIcon([...valueIcon,emojiData.unified]);
+
+    }
     // lấy ra mess trong phòng đó
     const handleGetRoom = (item) =>{
         setRoom(item)
@@ -23,6 +51,9 @@ function Chat(){
     const setchangeValue = (e,type) =>{
         if(type === "roomName"){
             setRoomName(e.target.value)
+        }
+        if(type === "inputMessage"){
+            setInputMessage(e.target.value)
         }
 
     }
@@ -39,11 +70,31 @@ function Chat(){
         setRoomName("");
 
     }
+    const hanleLogout = () =>{
+        socketSingleton.sendLogOut();
+        localStorage.clear();
+        navigate('/');
+
+
+    }
+    // nhấn tính phòng
+    const handleSendMessageChat = async () =>{
+        if(isShowIcon){
+            const value =   JSON.stringify(valueIcon);
+            setValueIcon([])
+            await socketSingleton.sendMessage(room.type,value, room.name)
+        }else {
+            await socketSingleton.sendMessage(room.type,inputMessage, room.name)
+        }
+
+        await socketSingleton.getMessByNameRoom(room.name,room.type)
+        setInputMessage("")
+    }
     useEffect(  () =>{
         socketSingleton.sendGetUserList();
     },[])
-    //load phong hay tao mới phòng điều lây ra tn
 
+    //load phong hay tao mới phòng điều lây ra tn
     useEffect(  () =>{
         if(rooms.length > 0){
             setRoom(rooms[0])
@@ -84,7 +135,7 @@ function Chat(){
             <div className="content-left-header">
                 <div className="left-header">
                     <div className="left-header-title">Chats</div>
-                    <button className="left-header-btn-logout btn">Đăng xuất</button>
+                    <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Đăng xuất</button>
                 </div>
                 <div className="left-header-add-room" style={{display:"flex"}}>
                     <input value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
@@ -127,21 +178,43 @@ function Chat(){
             </div>
             <div className="content-right-seem">
                 <Scrollbars style={{ width: "100%", height: "100%" }}>
-                    {messages.reverse().map((item,index) =>{
-                        return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes}/>
+                    {[...messages].reverse().map((item,index) =>{
+                        return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes} createAt={item.createAt}/>
                         )
                     })}
                 </Scrollbars>
             </div>
             <div className="content-right-send">
-                      <div className={"right-send-icon-img"}>
-                           <div className={"send-icon btn-icon"}><i className="fa-solid fa-face-laugh"></i></div>
-                           <div className={"send-img btn-icon"}><i className="fa-solid fa-image"></i></div>
-                      </div>
-                  <div className={"right-send-input"}>
-                    <div className={"group"}><input className={"input-group"} placeholder={"Nhập tin nhấn vào đây"}/></div>
-                     <button className={"btn btn-send"}><i className="fa-solid fa-paper-plane"></i></button>
-                 </div>
+                <div className={"right-send-icon-img"}>
+                    {isShowIcon===true&&<div className={"menu-icon"}> <EmojiPicker
+                        onEmojiClick={handleGetIcon}
+                        autoFocusSearch={false}
+                        searchDisabled
+                        height={350}
+
+                    /></div>}
+                    <div className={"send-icon btn-icon"} >
+                        <i className="fa-solid fa-face-laugh" onClick={(e)=>handleIsShowIcon(e)} ></i></div>
+
+                    <div className={"send-img btn-icon"}><i className="fa-solid fa-image"></i></div>
+                </div>
+                <div className={"right-send-input"}>
+
+                    {isShowIcon===true?<div className={"group group-1"}>
+                            {valueIcon.map((item,index)=>{
+                                return( <Emoji key={index}
+                                               unified={item}
+                                               emojiStyle={EmojiStyle.APPLE}
+                                               size={22}
+                                /> )
+                            })}
+                        </div>
+                        :<div className={"group"}><input value={inputMessage}
+                                                         onChange={(e) => setchangeValue(e, "inputMessage")}
+                                                         className={"input-group"} placeholder={"Nhập tin nhấn vào đây"}/></div>}
+
+                    <button onClick={ ()=> handleSendMessageChat()} className={"btn btn-send"}><i className="fa-solid fa-paper-plane"></i></button>
+                </div>
             </div>
         </div>
     </div>);
