@@ -135,13 +135,21 @@ function Chat(){
             <div className="content-left-header">
                 <div className="left-header">
                     <div className="left-header-title">Chats</div>
+                </div>
+                <div className={"list-btn-main"}>
+
+                    <div className={"list-btn"}>
+                        <button className="add-room btn" onClick={() => handleCreatRoom()}><i className="fa-solid fa-plus"></i></button>
+                        <button className="add-room btn" onClick={() => handleJoinRoom()} ><i
+                            className="fa-solid fa-arrow-right-to-bracket"></i></button>
+                        <button className="add-room btn" onClick={() => handleJoinRoom()} ><i
+                            className="fa-solid fa-arrow-right-to-bracket"></i></button>
+                    </div>
                     <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Đăng xuất</button>
                 </div>
                 <div className="left-header-add-room" style={{display:"flex"}}>
-                    <input value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
-                    <button className="add-room btn" onClick={() => handleCreatRoom()}><i className="fa-solid fa-plus"></i></button>
-                    <button className="add-room btn" onClick={() => handleJoinRoom()} ><i
-                        className="fa-solid fa-arrow-right-to-bracket"></i></button>
+                    <input placeholder={"Tìm kiếm"} value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
+
                 </div>
             </div>
             <div className="content-left-list">
