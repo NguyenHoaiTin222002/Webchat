@@ -161,7 +161,58 @@ function Chat(){
                         });
                     }
                     break;
-
+                case "CREATE_ROOM":
+                    if(result.status === "success"){
+                        toast.success('Successful create room', {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                    }else {
+                        toast.error(
+                            'Error, please check again', {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                    }
+                    break;
+                case "JOIN_ROOM":
+                    if(result.status === "success"){
+                    toast.success('Successful join room', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                }else {
+                    toast.error(
+                        'Error, please check again', {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
+                }
+                    break;
                 default:
                 // code block
             }
