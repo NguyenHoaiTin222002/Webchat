@@ -120,6 +120,15 @@ class SocketSingleton{
         }
         this.socket.send(JSON.stringify(value))
     }
+    sendLogOut(){
+        const logout = {
+            action: "onchat",
+            data: {
+                event: "LOGOUT",
+            },
+        };
+        this.socket.send(JSON.stringify(logout))
+    }
 
 }
 
