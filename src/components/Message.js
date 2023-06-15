@@ -2,20 +2,28 @@ import "../sass/Message.scss"
 import {useEffect, useState} from "react";
 import {Emoji, EmojiStyle} from "emoji-picker-react";
 import {fomatDate} from "../Dao/Fomat";
+import {formatArrayBufferDeCode} from "../Dao/Fomat";
 
 function Message(props){
     const [isIcon,setIsIcon] = useState( false);
     const [listIcon,setListIcon] = useState([]);
+    const [messChat,setMessChat] = useState("");
     useEffect(()=>{
-
         if(props.message.charAt(0)==='['){
             setIsIcon(true)
             const copyList = JSON.parse(props.message);
             setListIcon([...copyList]);
         }
+        if(props.message.charAt(0)==='{'){
+            const copyList = JSON.parse(props.message);
+            const  value = formatArrayBufferDeCode(copyList)
+            setMessChat(value);
+        }
     },[
     ])
+
     const date = fomatDate(props.createAt);
+
     return(
         <div className={`message ${props.myMessage === true ? "myMessage": ""}`}>
             <div className={`message_sender`}>
@@ -31,7 +39,7 @@ function Message(props){
                                size={22}
                 /> )
             })}</div>:<label>
-                {props.message}
+                {messChat === ""?props.message:messChat}
             </label>}
 
             </div>

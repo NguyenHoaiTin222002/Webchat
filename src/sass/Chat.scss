@@ -83,7 +83,7 @@
       .left-list {
         width: 100%;
         height: 480px;
-        border: 1px solid gainsboro;
+        border-top: 1px solid gainsboro;
       }
     }
     .content-left-footer{
@@ -107,7 +107,7 @@
           img.image {
             height: 100%;
             width: 100%;
-            border: 1px solid ;
+            box-shadow: 0 0 25px rgba(0,0,0,0.08);
             border-radius: 50%;
           }
         }

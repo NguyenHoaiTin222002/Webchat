@@ -9,6 +9,7 @@ import SocketSingleton from "../Dao/SocketSingleton";
 import {useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {enCoder} from "../Dao/Fomat";
 import EmojiPicker, {
     EmojiStyle,
     Emoji,
@@ -91,9 +92,10 @@ function Chat(){
             setValueIcon([])
             await socketSingleton.sendMessage(room.type,value, room.name)
         }else {
-            await socketSingleton.sendMessage(room.type,inputMessage, room.name)
+            const encode = enCoder(inputMessage);
+            const value =   JSON.stringify(encode);
+            await socketSingleton.sendMessage(room.type,value, room.name)
         }
-
         await socketSingleton.getMessByNameRoom(room.name,room.type)
         setInputMessage("")
     }
