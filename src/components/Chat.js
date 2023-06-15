@@ -7,6 +7,8 @@ import imgUser from "../assets/img/anhuser.png"
 import Message from "./Message";
 import SocketSingleton from "../Dao/SocketSingleton";
 import {useEffect, useState} from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import EmojiPicker, {
     EmojiStyle,
     Emoji,
@@ -98,6 +100,16 @@ function Chat(){
 
     useEffect(() =>{
         if(isCheckUser){
+            toast.success('Successful user search', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
             const createRoom = {name: roomName, type: 0, actionTime: '2023-05-21 14:46:17'}
             setRooms([createRoom,...rooms])
             setRoomName("");
@@ -135,6 +147,18 @@ function Chat(){
                 case "CHECK_USER":
                     if(result.status === "success"){
                         setIsCheckUser(true);
+                    }else {
+                        toast.error(
+                            'Error, please check again', {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        });
                     }
                     break;
 
@@ -144,6 +168,7 @@ function Chat(){
         });
     },[socketSingleton.socket])
     return(<div className="content">
+        <ToastContainer />
         <div className="content-left">
             <div className="content-left-header">
                 <div className="left-header">
