@@ -19,6 +19,7 @@ function Chat(){
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
     const [room,setRoom] = useState({});
+    const [isCheckUser,setIsCheckUser] = useState(false);
     const [roomName,setRoomName] = useState("");
     const [messages, setMessages] = useState([]);
     const  name = localStorage.getItem("name");
@@ -77,6 +78,10 @@ function Chat(){
 
 
     }
+
+    const handleCheckUser = async () =>{
+        await  socketSingleton.sendCheckUser(roomName);
+    }
     // nhấn tính phòng
     const handleSendMessageChat = async () =>{
         if(isShowIcon){
@@ -90,6 +95,16 @@ function Chat(){
         await socketSingleton.getMessByNameRoom(room.name,room.type)
         setInputMessage("")
     }
+
+    useEffect(() =>{
+        if(isCheckUser){
+            const createRoom = {name: roomName, type: 0, actionTime: '2023-05-21 14:46:17'}
+            setRooms([createRoom,...rooms])
+            setRoomName("");
+            setIsCheckUser(false);
+        }
+
+    },[isCheckUser])
     useEffect(  () =>{
         socketSingleton.sendGetUserList();
     },[])
@@ -119,9 +134,7 @@ function Chat(){
                     break;
                 case "CHECK_USER":
                     if(result.status === "success"){
-                        const item = {name: roomName, type: 0, actionTime: '2023-05-21 14:46:17'}
-                        const copyRooms = [item,...rooms] ;
-                        setRooms(copyRooms)
+                        setIsCheckUser(true);
                     }
                     break;
 
@@ -142,14 +155,13 @@ function Chat(){
                         <button className="add-room btn" onClick={() => handleCreatRoom()}><i className="fa-solid fa-plus"></i></button>
                         <button className="add-room btn" onClick={() => handleJoinRoom()} ><i
                             className="fa-solid fa-arrow-right-to-bracket"></i></button>
-                        <button className="add-room btn" onClick={() => handleJoinRoom()} ><i
-                            className="fa-solid fa-arrow-right-to-bracket"></i></button>
+                        <button className="add-room btn" onClick={() => handleCheckUser()} ><i
+                            className="fa-solid fa-user-plus"></i></button>
                     </div>
                     <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Đăng xuất</button>
                 </div>
                 <div className="left-header-add-room" style={{display:"flex"}}>
                     <input placeholder={"Tìm kiếm"} value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
-
                 </div>
             </div>
             <div className="content-left-list">

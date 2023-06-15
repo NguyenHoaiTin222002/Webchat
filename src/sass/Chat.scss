@@ -23,7 +23,6 @@
       .list-btn-main {
         display: flex;
         justify-content: space-between;
-
         .left-header-btn-logout {
           margin-left: 20px;
           width: 120px;
@@ -33,6 +32,8 @@
           background: #0091ff;
         }
         .list-btn{
+          display: flex;
+          gap: 10px;
           .add-room{
             position: relative;
             border: 1px solid #fff;
