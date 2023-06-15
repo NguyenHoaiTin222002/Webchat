@@ -11,7 +11,11 @@ import EmojiPicker, {
     EmojiStyle,
     Emoji,
 } from "emoji-picker-react";
+import {useNavigate} from "react-router-dom";
 function Chat(){
+
+
+
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
     const [room,setRoom] = useState({});
@@ -20,6 +24,8 @@ function Chat(){
     const  name = localStorage.getItem("name");
     const  code = localStorage.getItem("code");
     const [inputMessage,setInputMessage] = useState("");
+
+    let navigate = useNavigate();
 
     const [isShowIcon,setIsShowIcon] = useState(false);
     const [valueIcon,setValueIcon] = useState([]);
@@ -64,6 +70,13 @@ function Chat(){
         setRoomName("");
 
     }
+    const hanleLogout = () =>{
+        socketSingleton.sendLogOut();
+        localStorage.clear();
+        navigate('/');
+
+
+    }
     // nhấn tính phòng
     const handleSendMessageChat = async () =>{
         if(isShowIcon){
@@ -80,6 +93,7 @@ function Chat(){
     useEffect(  () =>{
         socketSingleton.sendGetUserList();
     },[])
+
     //load phong hay tao mới phòng điều lây ra tn
     useEffect(  () =>{
         if(rooms.length > 0){
@@ -121,7 +135,7 @@ function Chat(){
             <div className="content-left-header">
                 <div className="left-header">
                     <div className="left-header-title">Chats</div>
-                    <button className="left-header-btn-logout btn">Đăng xuất</button>
+                    <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Đăng xuất</button>
                 </div>
                 <div className="left-header-add-room" style={{display:"flex"}}>
                     <input value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
