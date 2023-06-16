@@ -10,15 +10,10 @@ import {useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {enCoder} from "../Dao/Fomat";
-import EmojiPicker, {
-    EmojiStyle,
-    Emoji,
-} from "emoji-picker-react";
+import InputEmoji from "react-input-emoji";
 import {useNavigate} from "react-router-dom";
 
-
 function Chat(){
-
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
     const [room,setRoom] = useState({});
@@ -28,26 +23,22 @@ function Chat(){
     const  name = localStorage.getItem("name");
     const  code = localStorage.getItem("code");
     const [inputMessage,setInputMessage] = useState("");
-
     let navigate = useNavigate();
 
-    const [isShowIcon,setIsShowIcon] = useState(false);
-    const [valueIcon,setValueIcon] = useState([]);
 
 
     const [valueImg,setValueImg] = useState([]);
     const [isSendImg,setIsSendImg] = useState(false)
     // gởi ảnh
     const sendImg = async (e) =>{
-        await uploadToImbb(e,async (link) =>{
-            console.log(valueImg)
-            await  setValueImg([...valueImg,link])
+         await  uploadToImbb(e,async (value) =>{
+             await setValueImg([...valueImg,...value])
         })
-
-        setIsSendImg(true)
+        setIsSendImg(true);
     }
     const uploadToImbb = async (e, callback = false) => {
         let files = e.target.files
+        var listLink = [];
         if (files) {
             for (const file of [...files]) {
                 console.log('Đang upload hình ảnh lên imgbb...')
@@ -71,7 +62,7 @@ function Chat(){
                 formData.append('timestamp', (+new Date()) * 1)
                 formData.append('auth_token', auth_token)
                 options.body = formData
-                await  fetch(apiUrl, options)
+                await fetch(apiUrl, options)
                     .then((response) => {
                         return response.json()
                     })
@@ -79,36 +70,14 @@ function Chat(){
                         let obj = response
                         let linkRS = obj.image.display_url
                         console.log("Link: " + linkRS)
-                        if (callback != false) {
-                            callback(linkRS)
-                        }
+                        listLink.push(linkRS);
                     })
+            }
+            if(callback != false) {
+                callback(listLink)
             }
         }
 
-    }
-    useEffect( ()=>{
-        if(isSendImg&&valueImg.length>0){
-            console.log(valueImg);
-            const value =  JSON.stringify(valueImg);
-            socketSingleton.sendMessage(room.type,value, room.name)
-            socketSingleton.getMessByNameRoom(room.name,room.type)
-            setValueImg([])
-            setIsSendImg(false);
-        }
-    },[isSendImg])
-
-    //show bảng icon
-    const handleIsShowIcon = (e) =>{
-        e.stopPropagation();
-        if(!isShowIcon){
-            setValueIcon([])
-        }
-        setIsShowIcon(() =>!isShowIcon);
-    }
-    // lấy value icon
-    const handleGetIcon =  ( emojiData) =>{
-        setValueIcon([...valueIcon,emojiData.unified]);
     }
 
     // lấy ra mess trong phòng đó
@@ -123,7 +92,6 @@ function Chat(){
         if(type === "inputMessage"){
             setInputMessage(e.target.value)
         }
-
     }
     // join phòng
     const handleJoinRoom = async ()=>{
@@ -142,27 +110,30 @@ function Chat(){
         socketSingleton.sendLogOut();
         localStorage.clear();
         navigate('/');
-
     }
-
     const handleCheckUser = async () =>{
         await  socketSingleton.sendCheckUser(roomName);
     }
     // nhấn tính phòng
     const handleSendMessageChat = async () =>{
-        if(isShowIcon){
-            const value =   JSON.stringify(valueIcon);
-            setValueIcon([])
-            await socketSingleton.sendMessage(room.type,value, room.name)
-        }else {
+        if(isSendImg){
+            const value =  JSON.stringify(valueImg);
+            socketSingleton.sendMessage(room.type,value, room.name)
+            setValueImg([])
+            setIsSendImg(false);
+        }
+        if(!isSendImg){
             const encode = enCoder(inputMessage);
             const value =   JSON.stringify(encode);
             await socketSingleton.sendMessage(room.type,value, room.name)
+            setInputMessage("")
         }
         await socketSingleton.getMessByNameRoom(room.name,room.type)
-        setInputMessage("")
     }
-
+    const deleteImg = (value)=>{
+        const new_arr = valueImg.filter(item => item !== value);
+        setValueImg([...new_arr]);
+    }
     useEffect(() =>{
         if(isCheckUser){
             toast.success('Successful user search', {
@@ -185,7 +156,6 @@ function Chat(){
     useEffect(  () =>{
         socketSingleton.sendGetUserList();
     },[])
-
     //load phong hay tao mới phòng điều lây ra tn
     useEffect(  () =>{
         if(rooms.length > 0){
@@ -198,7 +168,6 @@ function Chat(){
         socketSingleton.socket.addEventListener("message", function (event) {
             let result = JSON.parse(event.data);
             const data = result.data;
-            console.log(result)
             switch (result.event){
                 case "GET_USER_LIST":
                     setRooms(data)
@@ -283,6 +252,7 @@ function Chat(){
             }
         });
     },[socketSingleton.socket])
+    console.log(inputMessage)
     return(<div className="content">
         <ToastContainer />
         <div className="content-left">
@@ -347,35 +317,28 @@ function Chat(){
             </div>
             <div className="content-right-send">
                 <div className={"right-send-icon-img"}>
-                    {isShowIcon===true&&<div className={"menu-icon"}> <EmojiPicker
-                        onEmojiClick={handleGetIcon}
-                        autoFocusSearch={false}
-                        searchDisabled
-                        height={350}
-
-                    /></div>}
-                    <div className={"send-icon btn-icon"} >
-                        <i className="fa-solid fa-face-laugh" onClick={(e)=>handleIsShowIcon(e)} ></i></div>
-
                     <div className={"send-img btn-icon"} > <label htmlFor={"sendImg"}><i  className="fa-solid fa-image"></i></label>
-                        <input style={{display:"none"}} className={"inputImg"} type={"file"} id={"sendImg"} multiple={true} onChange={(e) => sendImg(e)}/>
+                        <input style={{display:"none"}}  className={"inputImg"} type={"file"} id={"sendImg"}  onChange={(e) => sendImg(e)}/>
                     </div>
+
+
                 </div>
                 <div className={"right-send-input"}>
-
-                    {isShowIcon===true?<div className={"group group-1"}>
-                            {valueIcon.map((item,index)=>{
-                                return( <Emoji key={index}
-                                               unified={item}
-                                               emojiStyle={EmojiStyle.APPLE}
-                                               size={22}
-                                /> )
-                            })}
-                        </div>
-                        :<div className={"group"}><input value={inputMessage}
-                                                         onChange={(e) => setchangeValue(e, "inputMessage")}
-                                                         className={"input-group"} placeholder={"Enter your message here"}/></div>}
-
+                    {isSendImg===true?<div className={"container-file"}>
+                        {valueImg&&valueImg.length>0?valueImg.map((item,index) =>{
+                            return(<div className={"show-img"} key={index}>
+                                <div className={"delete-img"}  onClick={()=>deleteImg(item)}><i
+                                    className="fa-solid fa-xmark"></i></div>
+                                <img  src={item} alt=""/>
+                            </div>)
+                        }):""}
+                    </div>:<div className={"group"}> <InputEmoji
+                        value={inputMessage}
+                        onChange={setInputMessage}
+                        placeholder="Type a message"
+                    />
+                    </div>
+                    }
                     <button onClick={ ()=> handleSendMessageChat()} className={"btn btn-send"}><i className="fa-solid fa-paper-plane"></i></button>
                 </div>
             </div>

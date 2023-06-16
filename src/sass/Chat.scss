@@ -136,6 +136,7 @@
     .content-right-send{
       .right-send-icon-img{
         position: relative;
+
         .menu-icon {
           position: absolute;
           top: -350px;
@@ -155,12 +156,43 @@
           margin: 0 5px;
           line-height: 50px;
         }
+
       }
       .right-send-input{
         display: flex;
         justify-content: space-around;
         padding: 5px;
+        .container-file{
+          width: 500px;
+          height: 100px;
+          background: #f0f2f5;
+          border-radius: 15px;
+          display: flex;
+          justify-content: left;
+          .show-img{
+            position: relative;
+            margin: 0 2px;
+            width: 80px;
+            .delete-img {
+              position: absolute;
+              right: 0;
+              font-size: 12px;
+            }
+            img{
+              width: 60px;
+            }
+          }
+        }
         .group{
+          width: 500px;
+          .react-input-emoji--button{
+            border: none;
+            outline: none;
+          }
+          .react-input-emoji--button__show {
+            border: none;
+            outline: none;
+          }
           &.group-1{
             width: 1000px;
             text-align: left;

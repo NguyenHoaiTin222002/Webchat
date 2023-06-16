@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState } from "react";
 import SocketSingleton from "../Dao/SocketSingleton";
 import {useDispatch, useSelector} from "react-redux";
+import { fireBaseStorage } from "../Dao/firebase";
 
 function Login(props){
     const isLogOut = useSelector(props => props.app.isLogOut);
@@ -29,7 +30,6 @@ function Login(props){
 
     const  handleLogin= async () =>{
         socketSingleton.sendLogin(userName,password);
-
         socketSingleton.socket.addEventListener("message", function (event) {
             let result = JSON.parse(event.data);
 
@@ -66,7 +66,6 @@ function Login(props){
                         placeholder="Enter your password"
                         onChange={(e) => setchangeValue(e.target.value,"password")}
                     />
-
                 </div>
 
                 <div className="col-12 message-err">
@@ -79,8 +78,6 @@ function Login(props){
                         Login
                     </button>
                 </div>
-
-
                 <div className="col-12">
                     <span className="forgot-password"> <Link to="/SignUp">  Sign up</Link> for an account?</span>
                 </div>
