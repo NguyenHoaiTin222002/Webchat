@@ -15,9 +15,9 @@ import EmojiPicker, {
     Emoji,
 } from "emoji-picker-react";
 import {useNavigate} from "react-router-dom";
+
+
 function Chat(){
-
-
 
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
@@ -34,7 +34,71 @@ function Chat(){
     const [isShowIcon,setIsShowIcon] = useState(false);
     const [valueIcon,setValueIcon] = useState([]);
 
-    //
+
+    const [valueImg,setValueImg] = useState([]);
+    const [isSendImg,setIsSendImg] = useState(false)
+    // gởi ảnh
+    const sendImg = async (e) =>{
+        await uploadToImbb(e,async (link) =>{
+            console.log(valueImg)
+            await  setValueImg([...valueImg,link])
+        })
+
+        setIsSendImg(true)
+    }
+    const uploadToImbb = async (e, callback = false) => {
+        let files = e.target.files
+        if (files) {
+            for (const file of [...files]) {
+                console.log('Đang upload hình ảnh lên imgbb...')
+                let apiUrl = 'https://Hoaitin70.imgbb.com/json'
+                let auth_token = 'e721864fb61ac30573759a0e9f792a9ff4e08a36'
+                let options = {
+                    async: false,
+                    crossDomain: true,
+                    processData: false,
+                    contentType: false,
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                    mimeType: 'multipart/form-data',
+                }
+                let formData = new FormData()
+                formData.append('source', file)
+                formData.append('type', 'file')
+                formData.append('action', 'upload')
+                formData.append('timestamp', (+new Date()) * 1)
+                formData.append('auth_token', auth_token)
+                options.body = formData
+                await  fetch(apiUrl, options)
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then((response) => {
+                        let obj = response
+                        let linkRS = obj.image.display_url
+                        console.log("Link: " + linkRS)
+                        if (callback != false) {
+                            callback(linkRS)
+                        }
+                    })
+            }
+        }
+
+    }
+    useEffect( ()=>{
+        if(isSendImg&&valueImg.length>0){
+            console.log(valueImg);
+            const value =  JSON.stringify(valueImg);
+            socketSingleton.sendMessage(room.type,value, room.name)
+            socketSingleton.getMessByNameRoom(room.name,room.type)
+            setValueImg([])
+            setIsSendImg(false);
+        }
+    },[isSendImg])
+
+    //show bảng icon
     const handleIsShowIcon = (e) =>{
         e.stopPropagation();
         if(!isShowIcon){
@@ -45,8 +109,8 @@ function Chat(){
     // lấy value icon
     const handleGetIcon =  ( emojiData) =>{
         setValueIcon([...valueIcon,emojiData.unified]);
-
     }
+
     // lấy ra mess trong phòng đó
     const handleGetRoom = (item) =>{
         setRoom(item)
@@ -78,7 +142,6 @@ function Chat(){
         socketSingleton.sendLogOut();
         localStorage.clear();
         navigate('/');
-
 
     }
 
@@ -294,7 +357,9 @@ function Chat(){
                     <div className={"send-icon btn-icon"} >
                         <i className="fa-solid fa-face-laugh" onClick={(e)=>handleIsShowIcon(e)} ></i></div>
 
-                    <div className={"send-img btn-icon"}><i className="fa-solid fa-image"></i></div>
+                    <div className={"send-img btn-icon"} > <label htmlFor={"sendImg"}><i  className="fa-solid fa-image"></i></label>
+                        <input style={{display:"none"}} className={"inputImg"} type={"file"} id={"sendImg"} multiple={true} onChange={(e) => sendImg(e)}/>
+                    </div>
                 </div>
                 <div className={"right-send-input"}>
 

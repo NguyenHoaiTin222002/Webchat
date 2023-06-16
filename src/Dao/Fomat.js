@@ -15,6 +15,10 @@ export const enCoder = (value)=>{
     const utf8Bytes = encoder.encode(value);
     return utf8Bytes;
 }
+export const isImageLink = (link) => {
+    return /\.(jpe?g|png|gif)$/i.test(link);
+}
+
 
 export const deCoder = (value)=>{
     // Giải mã chuỗi UTF-8
