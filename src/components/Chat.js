@@ -299,15 +299,15 @@ function Chat(){
                         <button className="add-room btn" onClick={() => handleCheckUser()} ><i
                             className="fa-solid fa-user-plus"></i></button>
                     </div>
-                    <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Đăng xuất</button>
+                    <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Logout</button>
                 </div>
                 <div className="left-header-add-room" style={{display:"flex"}}>
-                    <input placeholder={"Tìm kiếm"} value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
+                    <input placeholder={"Search"} value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
                 </div>
             </div>
             <div className="content-left-list">
                 <div className="left-list-title">
-                     Danh sách các phòng
+                    List room
                 </div>
                 <div className="left-list">
                     <Scrollbars style={{ width: "100%", height: "100%" }}>
@@ -374,7 +374,7 @@ function Chat(){
                         </div>
                         :<div className={"group"}><input value={inputMessage}
                                                          onChange={(e) => setchangeValue(e, "inputMessage")}
-                                                         className={"input-group"} placeholder={"Nhập tin nhấn vào đây"}/></div>}
+                                                         className={"input-group"} placeholder={"Enter your message here"}/></div>}
 
                     <button onClick={ ()=> handleSendMessageChat()} className={"btn btn-send"}><i className="fa-solid fa-paper-plane"></i></button>
                 </div>
