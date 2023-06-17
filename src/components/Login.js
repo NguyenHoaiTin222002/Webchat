@@ -46,24 +46,24 @@ function Login(props){
     return(<div className="login-background">
         <div className="login-container">
             <div className="login-content row">
-                <div className="col-12 text-center login-title">Login</div>
+                <div className="col-12 text-center login-title">Đăng nhập</div>
                 <div className="col-12 form-group magrin-input">
-                    <label>Username: </label>
+                    <label>Tài khoản: </label>
                     <input
                         value={userName}
                         type="text"
                         className="login-input "
-                        placeholder="Enter your user name"
+                        placeholder="Nhập tài khoản"
                         onChange={(e) => setchangeValue(e.target.value,"userName")}
                     />
                 </div>
                 <div className="col-12 form-group magrin-input " >
-                    <label>Password: </label>
+                    <label>Mật khẩu: </label>
                     <input
                         value={password}
-                        type="text"
+                        type="password"
                         className="login-input "
-                        placeholder="Enter your password"
+                        placeholder="Nhập mật khẩu"
                         onChange={(e) => setchangeValue(e.target.value,"password")}
                     />
                 </div>
@@ -75,14 +75,14 @@ function Login(props){
                     <button onClick={() => handleLogin()}
                             className="btn-login"
                     >
-                        Login
+                      Đăng nhập
                     </button>
                 </div>
                 <div className="col-12">
-                    <span className="forgot-password"> <Link to="/SignUp">  Sign up</Link> for an account?</span>
+                    <span className="forgot-password"> <Link to="/SignUp">Đăng ký</Link> tài khoản?</span>
                 </div>
                 <div className="col-12 text-center login-with mt-3">
-                    <span className="">Or login with:</span>
+                    <span className="">Hoặc đăng nhập với:</span>
                 </div>
                 <div className="col-12 social-login">
                     <i className="fab fa-facebook social-icon fb"></i>
