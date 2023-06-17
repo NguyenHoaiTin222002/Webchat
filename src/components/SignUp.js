@@ -48,24 +48,24 @@ function SignUP(){
     return(<div className="login-background">
         <div className="login-container">
             <div className="login-content row">
-                <div className="col-12 text-center login-title">Sign Up</div>
+                <div className="col-12 text-center login-title">Đăng ký</div>
                 <div className="col-12 form-group magrin-input margin-sign">
-                    <label className="label-title">Username: </label>
+                    <label className="label-title">Tài khoản: </label>
                     <input
                         value={userName}
                         type="text"
                         className="login-input "
-                        placeholder="Enter your user name"
+                        placeholder="Nhập tài khoản"
                         onChange={(e) => setchangeValue(e.target.value,"userName")}
                     />
                 </div>
                 <div className="col-12 form-group magrin-input margin-sign "  >
-                    <label className="label-title">Password: </label>
+                    <label className="label-title">Mật khẩu: </label>
                     <input
                         value={password}
-                        type="text"
+                        type="password"
                         className="login-input "
-                        placeholder="Enter your password"
+                        placeholder="Nhập mật khẩu"
                         onChange={(e) => setchangeValue(e.target.value,"password")}
                     />
 
@@ -81,12 +81,12 @@ function SignUP(){
                     <button onClick={() => handleSignUp()}
                         className="btn-login"
                     >
-                     Sign Up
+                    Đăng ký
                     </button>
                 </div>
 
                 <div className="col-12">
-                    <span className="forgot-password"> <Link to="/"> Log in  </Link> to your account</span>
+                    <span className="forgot-password"> <Link to="/"> Đăng nhập</Link> tài khoản</span>
                 </div>
             </div>
         </div>

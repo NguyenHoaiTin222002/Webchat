@@ -176,7 +176,7 @@ function Chat(){
     }
     useEffect(() =>{
         if(isCheckUser){
-            toast.success('Successful user search', {
+            toast.success('Tìm tài khoản thành công', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -223,7 +223,7 @@ function Chat(){
                         setIsCheckUser(true);
                     }else {
                         toast.error(
-                            'Error, please check again', {
+                            'Lỗi, hãy tìm lại', {
                             position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -237,7 +237,7 @@ function Chat(){
                     break;
                 case "CREATE_ROOM":
                     if(result.status === "success"){
-                        toast.success('Successful create room', {
+                        toast.success('Tạo phòng thành công', {
                             position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -249,7 +249,7 @@ function Chat(){
                         });
                     }else {
                         toast.error(
-                            'Error, please check again', {
+                            'Lỗi, hãy tìm lại', {
                                 position: "top-right",
                                 autoClose: 5000,
                                 hideProgressBar: false,
@@ -263,7 +263,7 @@ function Chat(){
                     break;
                 case "JOIN_ROOM":
                     if(result.status === "success"){
-                    toast.success('Successful join room', {
+                    toast.success('Tham gia phòng thành công', {
                         position: "top-right",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -275,7 +275,7 @@ function Chat(){
                     });
                 }else {
                     toast.error(
-                        'Error, please check again', {
+                        'Lỗi, hãy tìm lại', {
                             position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -308,15 +308,19 @@ function Chat(){
                         <button className="add-room btn" onClick={() => handleCheckUser()} ><i
                             className="fa-solid fa-user-plus"></i></button>
                     </div>
-                    <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Logout</button>
+                    <button onClick={() => hanleLogout()} className="left-header-btn-logout btn">Đăng xuất</button>
                 </div>
                 <div className="left-header-add-room" style={{display:"flex"}}>
-                    <input placeholder={"Search"} value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
+                    <input placeholder={"Tìm kiếm...."} value={roomName} onChange={(e) => setchangeValue(e,"roomName")}/>
                 </div>
             </div>
             <div className="content-left-list">
                 <div className="left-list-title">
-                    List room
+                    <hr width="100%"
+                        color="#0091ff"
+                        align="center"
+                        size="15px">
+                    </hr>
                 </div>
                 <div className="left-list">
                     <Scrollbars style={{ width: "100%", height: "100%" }}>
@@ -328,7 +332,7 @@ function Chat(){
                 </div>
             </div>
             <div className="content-left-footer">
-                <div>App chat nhóm 9</div>
+                <div>Web chat nhóm 17</div>
                 <div>Giáo Viên: Phan Đình Long</div>
             </div>
         </div>
@@ -384,7 +388,7 @@ function Chat(){
                     :<div className={"group"}> <InputEmoji
                             value={inputMessage}
                             onChange={setInputMessage}
-                            placeholder="Type a message"
+                            placeholder="Nhập tin nhắn...."
                         />
                         </div>}</>
 
