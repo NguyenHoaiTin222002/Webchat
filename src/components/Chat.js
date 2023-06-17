@@ -152,7 +152,7 @@ function Chat(){
             setVideoUrls([])
             setIsVideo(false);
         }
-        if(!isSendImg){
+        if(!isSendImg&&inputMessage.length>0){
             const encode = enCoder(inputMessage);
             const value =   JSON.stringify(encode);
             await socketSingleton.sendMessage(room.type,value, room.name)
@@ -161,10 +161,16 @@ function Chat(){
         await socketSingleton.getMessByNameRoom(room.name,room.type)
     }
     const deleteImg = (value)=>{
+        if(valueImg.length===1){
+            setIsSendImg(false);
+        }
         const new_arr = valueImg.filter(item => item !== value);
         setValueImg([...new_arr]);
     }
     const deleteVideo = (value)=>{
+        if(videoUrls.length===1){
+            setIsSendImg(false);
+        }
         const new_arr = videoUrls.filter(item => item !== value);
         setVideoUrls([...new_arr]);
     }
