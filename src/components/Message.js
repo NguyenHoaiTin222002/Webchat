@@ -5,23 +5,27 @@ import {fomatDate} from "../Dao/Fomat";
 import {formatArrayBufferDeCode} from "../Dao/Fomat";
 import {isImageLink} from "../Dao/Fomat";
 function Message(props){
-    const [isIcon,setIsIcon] = useState( false);
-    const [listIcon,setListIcon] = useState([]);
+
+    const [isVideo,setIsVideo] = useState(false)
+    const [listVideo,setListVideo] = useState([]);
     const [messChat,setMessChat] = useState("");
     const [isImg,setIsImg] = useState(false)
     const [listImg,setListImg] = useState([]);
     useEffect(()=>{
         if(props.message.charAt(0)==='['){
             const copyList = JSON.parse(props.message);
-
+            const item  =  new String(copyList[0]);
             if(isImageLink(copyList[0])){
-                console.log(copyList.length)
+
                 setIsImg(true)
                 setListImg([...copyList])
-            }else {
-                setIsIcon(true)
-                setListIcon([...copyList]);
             }
+
+            if(item.includes(".mp4")){
+                setIsVideo(true)
+                setListVideo([...copyList])
+            }
+
         }
         if(props.message.charAt(0)==='{'){
             const copyList = JSON.parse(props.message);
@@ -42,12 +46,8 @@ function Message(props){
 
             <div className={`message_value  ${props.myMessage === true ? "message_right": ""}
             `}>
-                {isIcon===true&&listIcon.length>0?<div> {listIcon.map((item,index)=>{
-                    return( <Emoji key={index}
-                                   unified={item}
-                                   emojiStyle={EmojiStyle.APPLE}
-                                   size={22}
-                    /> )
+                {isVideo===true&&listVideo.length>0?<div> {listVideo.map((item,index)=>{
+                    return( <video controls style={{width:"200px",height:"auto"}} src={item} ></video> )
                 })}</div>:<>
                     {isImg===true && listImg.length>0?<div> {listImg.map((item,index)=>{
                         return(

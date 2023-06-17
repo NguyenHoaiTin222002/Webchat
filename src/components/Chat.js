@@ -12,6 +12,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import {enCoder} from "../Dao/Fomat";
 import InputEmoji from "react-input-emoji";
 import {useNavigate} from "react-router-dom";
+import { v4 } from "uuid";
+import {
+    ref,
+    uploadBytes,
+    getDownloadURL,
+    listAll,
+    list,
+} from "firebase/storage";
+import {fireBaseStorage} from "../Dao/firebase";
 
 function Chat(){
     const socketSingleton = new SocketSingleton();
@@ -24,11 +33,27 @@ function Chat(){
     const  code = localStorage.getItem("code");
     const [inputMessage,setInputMessage] = useState("");
     let navigate = useNavigate();
-
+    const [videoUrls, setVideoUrls] = useState([]);
+    const [isVideo, setIsVideo] = useState(false);
+    const videosListRef = ref(fireBaseStorage, "files/");
 
 
     const [valueImg,setValueImg] = useState([]);
     const [isSendImg,setIsSendImg] = useState(false)
+    const uploadVideo = (e) => {
+        const file = e.target.files[0];
+        if(file){
+            const videoRef = ref(fireBaseStorage, `files/${file.name}`);
+            uploadBytes(videoRef, file).then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((url) => {
+                    setVideoUrls([...videoUrls,url])
+                });
+            });
+            setIsVideo(true);
+        }
+
+    };
+
     // gởi ảnh
     const sendImg = async (e) =>{
          await  uploadToImbb(e,async (value) =>{
@@ -122,6 +147,12 @@ function Chat(){
             setValueImg([])
             setIsSendImg(false);
         }
+        if(isVideo){
+            const value =  JSON.stringify(videoUrls);
+            socketSingleton.sendMessage(room.type,value, room.name)
+            setVideoUrls([])
+            setIsVideo(false);
+        }
         if(!isSendImg){
             const encode = enCoder(inputMessage);
             const value =   JSON.stringify(encode);
@@ -133,6 +164,10 @@ function Chat(){
     const deleteImg = (value)=>{
         const new_arr = valueImg.filter(item => item !== value);
         setValueImg([...new_arr]);
+    }
+    const deleteVideo = (value)=>{
+        const new_arr = videoUrls.filter(item => item !== value);
+        setVideoUrls([...new_arr]);
     }
     useEffect(() =>{
         if(isCheckUser){
@@ -252,7 +287,6 @@ function Chat(){
             }
         });
     },[socketSingleton.socket])
-    console.log(inputMessage)
     return(<div className="content">
         <ToastContainer />
         <div className="content-left">
@@ -287,8 +321,6 @@ function Chat(){
                         )}
                     </Scrollbars>
                 </div>
-
-
             </div>
             <div className="content-left-footer">
                 <div>App chat nhóm 9</div>
@@ -317,11 +349,12 @@ function Chat(){
             </div>
             <div className="content-right-send">
                 <div className={"right-send-icon-img"}>
+                    <div className={"send-img btn-icon"} > <label htmlFor={"sendVideo"}><i  className="fa-solid fa-image"></i></label>
+                        <input style={{display:"none"}}  className={"inputImg"} type={"file"} id={"sendVideo"}  onChange={(e) => uploadVideo(e)}/>
+                    </div>
                     <div className={"send-img btn-icon"} > <label htmlFor={"sendImg"}><i  className="fa-solid fa-image"></i></label>
                         <input style={{display:"none"}}  className={"inputImg"} type={"file"} id={"sendImg"}  onChange={(e) => sendImg(e)}/>
                     </div>
-
-
                 </div>
                 <div className={"right-send-input"}>
                     {isSendImg===true?<div className={"container-file"}>
@@ -332,12 +365,23 @@ function Chat(){
                                 <img  src={item} alt=""/>
                             </div>)
                         }):""}
-                    </div>:<div className={"group"}> <InputEmoji
-                        value={inputMessage}
-                        onChange={setInputMessage}
-                        placeholder="Type a message"
-                    />
-                    </div>
+                    </div>:<>{isVideo===true&&videoUrls.length>0?
+                        <div className={"container-file"}>
+                            {videoUrls&&videoUrls.length>0?videoUrls.map((item,index) =>{
+                                return(<div className={"show-img"} key={index}>
+                                    <div className={"delete-img"}  onClick={()=>deleteVideo(item)}><i
+                                        className="fa-solid fa-xmark"></i></div>
+                                    <video style={{width:"60px",height:"60px"}} src={item} ></video>
+                                </div>)
+                            }):""}
+                        </div>
+                    :<div className={"group"}> <InputEmoji
+                            value={inputMessage}
+                            onChange={setInputMessage}
+                            placeholder="Type a message"
+                        />
+                        </div>}</>
+
                     }
                     <button onClick={ ()=> handleSendMessageChat()} className={"btn btn-send"}><i className="fa-solid fa-paper-plane"></i></button>
                 </div>
