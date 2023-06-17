@@ -33,10 +33,9 @@ function Chat(){
     const  code = localStorage.getItem("code");
     const [inputMessage,setInputMessage] = useState("");
     let navigate = useNavigate();
+
     const [videoUrls, setVideoUrls] = useState([]);
     const [isVideo, setIsVideo] = useState(false);
-    const videosListRef = ref(fireBaseStorage, "files/");
-
 
     const [valueImg,setValueImg] = useState([]);
     const [isSendImg,setIsSendImg] = useState(false)
@@ -349,7 +348,8 @@ function Chat(){
             </div>
             <div className="content-right-send">
                 <div className={"right-send-icon-img"}>
-                    <div className={"send-img btn-icon"} > <label htmlFor={"sendVideo"}><i  className="fa-solid fa-image"></i></label>
+                    <div className={"send-img btn-icon"} > <label htmlFor={"sendVideo"}><i
+                        className="fa-solid fa-photo-film"></i></label>
                         <input style={{display:"none"}}  className={"inputImg"} type={"file"} id={"sendVideo"}  onChange={(e) => uploadVideo(e)}/>
                     </div>
                     <div className={"send-img btn-icon"} > <label htmlFor={"sendImg"}><i  className="fa-solid fa-image"></i></label>
