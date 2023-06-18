@@ -348,13 +348,21 @@ function Chat(){
                 </div>
 
             </div>
-            <div className="content-right-seem">
-                <Scrollbars style={{ width: "100%", height: "100%" }}>
+            <div className={`content-right-seem  ${isVideo||isSendImg?"display-w":""}`}>
+                {messages&&messages.length>0?<Scrollbars style={{ width: "100%", height: "100%" }}>
                     {[...messages].reverse().map((item,index) =>{
                         return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes} createAt={item.createAt}/>
                         )
                     })}
-                </Scrollbars>
+                </Scrollbars>:
+                    <div className="right-header-left" >
+                        <div className="right-header-image"><img className="image" src={room.type===0?imgUser:imgTeam} /></div>
+                        <div className="right-header-name">{room.name}</div>
+                        <div className={'un-mess'}> Hãy Nhắn tin để bắt đầu cuộc trò chuyện </div>
+                    </div>
+                    }
+
+
             </div>
             <div className="content-right-send">
                 <div className={"right-send-icon-img"}>

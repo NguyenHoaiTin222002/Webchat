@@ -133,6 +133,28 @@
       height: 480px;
       background: gainsboro;
       padding: 10px;
+
+      .right-header-left{
+         display: flex;
+        height: 50px;
+        margin-top: 100px;
+        flex-direction: column;
+        .right-header-name{
+          font-weight: 600;
+        }
+        .right-header-image{
+          width: 100%;
+          img.image {
+            height: 50px;
+            width: 50px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.08);
+            border-radius: 50%;
+          }
+        }
+      }
+      &.display-w{
+        height: 440px;
+      }
     }
     .content-right-send{
       .right-send-icon-img{
