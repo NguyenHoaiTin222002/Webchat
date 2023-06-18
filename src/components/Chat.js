@@ -340,8 +340,8 @@ function Chat(){
                 </div>
             </div>
             <div className="content-left-footer">
-                <div>Web chat nhóm 17</div>
-                <div>Giáo Viên: Phan Đình Long</div>
+                <div>Web chat</div>
+                <div>Bản quyền thuộc nhóm 17</div>
             </div>
         </div>
         <div className="content-right">
@@ -366,7 +366,7 @@ function Chat(){
                     <div className="right-header-left" >
                         <div className="right-header-image"><img className="image" src={room.type===0?imgUser:imgTeam} /></div>
                         <div className="right-header-name">{room.name}</div>
-                        <div className={'un-mess'}> Hãy Nhắn tin để bắt đầu cuộc trò chuyện </div>
+                        <div className={'un-mess'}> Hãy nhắn tin để bắt đầu cuộc trò chuyện </div>
                     </div>
                     }
             </div>

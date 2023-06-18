@@ -37,7 +37,7 @@ function SignUP(){
         console.log(event.data)
         const  data = JSON.parse(event.data);
         if(data.status === 'error' ){
-            setmessErr(data.mes);
+            setmessErr("Lỗi đăng ký");
         }else {
             navigate('/')
         }
