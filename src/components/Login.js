@@ -34,7 +34,7 @@ function Login(props){
             let result = JSON.parse(event.data);
 
             if(result.status === 'error' ){
-                setmessErr(result.mes);
+                setmessErr("Lỗi đăng nhập, sai tài khoản hoặc mật khẩu!");
             }
             if(result.status === 'success' && result.data["RE_LOGIN_CODE"] !== undefined ){
                 localStorage.setItem("code",JSON.stringify(result.data["RE_LOGIN_CODE"]))
