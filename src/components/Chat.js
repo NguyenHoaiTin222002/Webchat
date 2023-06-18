@@ -23,6 +23,7 @@ import {
 import {fireBaseStorage} from "../Dao/firebase";
 
 function Chat(){
+
     const socketSingleton = new SocketSingleton();
     const [rooms,setRooms] = useState([]);
     const [room,setRoom] = useState({});
@@ -33,7 +34,7 @@ function Chat(){
     const  code = localStorage.getItem("code");
     const [inputMessage,setInputMessage] = useState("");
     let navigate = useNavigate();
-
+    var create = 1;
     const [videoUrls, setVideoUrls] = useState([]);
     const [isVideo, setIsVideo] = useState(false);
 
@@ -207,7 +208,10 @@ function Chat(){
     useEffect(() =>{
         socketSingleton.socket.addEventListener("message", function (event) {
             let result = JSON.parse(event.data);
-            const data = result.data;
+            const data = result.data
+            create++;
+            if(create%2==0){
+            console.log(result)
             switch (result.event){
                 case "GET_USER_LIST":
                     setRooms(data)
@@ -220,7 +224,7 @@ function Chat(){
                     break;
                 case "CHECK_USER":
                     if(result.status === "success"){
-                        setIsCheckUser(true);
+                            setIsCheckUser(true);
                     }else {
                         toast.error(
                             'Lỗi, hãy tìm lại', {
@@ -237,19 +241,7 @@ function Chat(){
                     break;
                 case "CREATE_ROOM":
                     if(result.status === "success"){
-                        toast.success('Tạo phòng thành công', {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-                    }else {
-                        toast.error(
-                            'Lỗi, hãy tìm lại', {
+                            toast.success('Tạo phòng thành công', {
                                 position: "top-right",
                                 autoClose: 5000,
                                 hideProgressBar: false,
@@ -259,6 +251,21 @@ function Chat(){
                                 progress: undefined,
                                 theme: "light",
                             });
+
+                    }else {
+                            toast.error(
+                                'Lỗi, hãy tìm lại', {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "light",
+                                });
+
+
                     }
                     break;
                 case "JOIN_ROOM":
@@ -289,6 +296,7 @@ function Chat(){
                     break;
                 default:
                 // code block
+            }
             }
         });
     },[socketSingleton.socket])
@@ -351,7 +359,7 @@ function Chat(){
             <div className={`content-right-seem  ${isVideo||isSendImg?"display-w":""}`}>
                 {messages&&messages.length>0?<Scrollbars style={{ width: "100%", height: "100%" }}>
                     {[...messages].reverse().map((item,index) =>{
-                        return( <Message key ={item.id} myMessage={item.name === name?true:false} name={item.name} message={item.mes} createAt={item.createAt}/>
+                        return( <Message key= {item.index} myMessage={item.name === name?true:false} name={item.name} message={item.mes} createAt={item.createAt}/>
                         )
                     })}
                 </Scrollbars>:
@@ -361,8 +369,6 @@ function Chat(){
                         <div className={'un-mess'}> Hãy Nhắn tin để bắt đầu cuộc trò chuyện </div>
                     </div>
                     }
-
-
             </div>
             <div className="content-right-send">
                 <div className={"right-send-icon-img"}>
